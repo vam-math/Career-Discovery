@@ -60,26 +60,8 @@
   </main>
   <footer>Fundaspring Career Explorer • Demonstration version</footer>
   <script>
-    // Demonstration record. Later, we will move all career data into careers.json.
-    const careers = [
-      {
-        id: 'ui-ux-designer', title: 'UI/UX Designers', icon: '🎨', category: 'Art & Design',
-        description: 'Design digital experiences, such as websites and apps, that people find useful and easy to use.',
-        group: 'Any stream for some programmes; PCM required for certain institutes',
-        course: 'B.Des in Interaction Design, Communication Design, or a related design discipline',
-        duration: 'Typically 4 years (B.Des)',
-        exams: [
-          { name: 'UCEED', month: 'January', admission: 'Typically March–July' },
-          { name: 'NID DAT', month: 'December (Prelims)', admission: 'Typically April–July' }
-        ],
-        salary: '₹4–10 LPA (book-based illustration; to be updated)',
-        colleges: {
-          nirf: ['IIT Bombay', 'IIT Delhi', 'IIT Guwahati', 'IIT Hyderabad'],
-          india: ['IDC School of Design, IIT Bombay', 'Department of Design, IIT Delhi', 'NID Ahmedabad', 'MIT Institute of Design, Pune'],
-          tamilnadu: ['VIT School of Design, Vellore']
-        }
-      }
-    ];
+    // Career content is stored separately so cards can be updated without editing the website.
+    let careers = [];
 
     const $ = id => document.getElementById(id);
     const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -117,7 +99,7 @@
             <button class="tab" data-list="india">Across India</button>
             <button class="tab" data-list="tamilnadu">Tamil Nadu</button>
           </div><div id="college-list"></div>
-          <p class="note">Demonstration college options. The final data will match colleges to their relevant courses and admission pathways.</p>
+          <p class="note">Career pathways vary by institution. Check course eligibility and admission details when applying.</p>
         </div>`;
       $('back').addEventListener('click', () => { $('detail').classList.add('hidden'); $('home').classList.remove('hidden'); window.scrollTo(0,0); });
       function selectColleges(key) {
@@ -129,8 +111,21 @@
       window.scrollTo(0,0);
     }
     $('search').addEventListener('input', renderCatalog);
-    renderCatalog();
+    async function loadCareers() {
+      $('count').textContent = 'Loading career cards…';
+      try {
+        const response = await fetch('./careers.json', { cache: 'no-cache' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const records = await response.json();
+        if (!Array.isArray(records)) throw new Error('Invalid career data');
+        careers = records;
+        renderCatalog();
+      } catch (error) {
+        $('count').textContent = 'Unable to load career cards. Please check that careers.json is uploaded in the same folder as index.html.';
+        console.error(error);
+      }
+    }
+    loadCareers();
   </script>
 </body>
 </html>
-
