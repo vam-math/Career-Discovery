@@ -58,7 +58,7 @@
     </section>
     <section id="detail" class="detail hidden" aria-live="polite"></section>
   </main>
-  <footer>Fundaspring Career Explorer • Demonstration version</footer>
+  <footer>Fundaspring • Career Discovery</footer>
   <script>
     // Career content is stored separately so cards can be updated without editing the website.
     let careers = [];
@@ -69,10 +69,10 @@
     function renderCatalog() {
       const query = $('search').value.toLowerCase().trim();
       const matches = careers.filter(c => [c.title, c.category, c.course, c.group].join(' ').toLowerCase().includes(query));
-      $('count').textContent = `${matches.length} career${matches.length === 1 ? '' : 's'} available in this demonstration`;
+      $('count').textContent = `${matches.length} career${matches.length === 1 ? '' : 's'} available`;
       $('catalog').innerHTML = matches.map(c => `<button class="tile" data-id="${escapeHTML(c.id)}">
         <div class="emoji">${escapeHTML(c.icon)}</div><strong>${escapeHTML(c.title)}</strong>
-        <small>${escapeHTML(c.category)} · View career details →</small></button>`).join('') || '<p>No matching career in this demo.</p>';
+        <small>${escapeHTML(c.category)} · View career details →</small></button>`).join('') || '<p>No matching career found.</p>';
       $('catalog').querySelectorAll('[data-id]').forEach(btn => btn.addEventListener('click', () => openCard(btn.dataset.id)));
     }
     function openCard(id) {
@@ -93,13 +93,12 @@
         <div class="section"><h3>Entrance exams and timelines</h3>
           ${asList(c.exams.map(e => `${e.name} — Exam: ${e.month}; admission: ${e.admission}`))}
         </div>
-        <div class="section"><h3>Colleges to explore</h3>
+        <div class="section"><h3>College options</h3>
           <div class="tabs" role="group" aria-label="College lists">
-            <button class="tab active" data-list="nirf">NIRF</button>
+            <button class="tab active" data-list="nirf">NIRF category</button>
             <button class="tab" data-list="india">Across India</button>
-            <button class="tab" data-list="tamilnadu">Tamil Nadu</button>
           </div><div id="college-list"></div>
-          <p class="note">Career pathways vary by institution. Check course eligibility and admission details when applying.</p>
+          <p class="note">NIRF lists reflect broad institutional categories, not a career-specific ranking. Check the selected college’s programme and eligibility before applying.</p>
         </div>`;
       $('back').addEventListener('click', () => { $('detail').classList.add('hidden'); $('home').classList.remove('hidden'); window.scrollTo(0,0); });
       function selectColleges(key) {
