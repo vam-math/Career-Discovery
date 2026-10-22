@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fundaspring | Career Discovery</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #1d2939; background: #f5f8fc; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header { background: #173c68; color: white; padding: 20px max(20px, calc((100vw - 1040px)/2)); }
+    .brand { font-weight: 800; font-size: 21px; letter-spacing: -.4px; }
+    .brand span { color: #93d8ff; }
+    main { max-width: 1040px; margin: auto; padding: 36px 20px 80px; }
+    .eyebrow { color: #1578b4; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+    h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.1; margin: 12px 0; }
+    h2 { margin: 0 0 12px; }
+    .intro { max-width: 700px; line-height: 1.6; color: #52647b; }
+    .search { margin: 28px 0; width: 100%; padding: 17px 20px; border: 1px solid #cbd7e5; border-radius: 14px; font-size: 17px; }
+    .search:focus { outline: 3px solid #b4e4ff; border-color: #1679bb; }
+    .count { color: #60728a; font-size: 14px; margin-bottom: 14px; }
+    .catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .tile, .detail { background: white; border: 1px solid #dfe6ee; border-radius: 18px; box-shadow: 0 5px 20px #1f3c6310; }
+    .tile { padding: 22px; text-align: left; cursor: pointer; color: inherit; font: inherit; }
+    .tile:hover, .tile:focus-visible { border-color: #1679bb; box-shadow: 0 8px 25px #1679bb24; }
+    .tile strong { display: block; margin: 12px 0 8px; font-size: 19px; }
+    .tile small { color: #60728a; }
+    .emoji { font-size: 34px; }
+    .detail { padding: clamp(20px, 4vw, 36px); margin-top: 24px; }
+    .hidden { display: none !important; }
+    .back { background: transparent; border: 0; color: #126da5; font-weight: 750; cursor: pointer; padding: 0 0 20px; font-size: 15px; }
+    .pill { display: inline-block; background: #e2f3fc; color: #12669a; padding: 7px 12px; border-radius: 50px; font-size: 12px; font-weight: 750; }
+    .description { color: #52647b; line-height: 1.7; }
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 12px; margin: 22px 0; }
+    .fact { background: #f1f6fc; padding: 17px; border-radius: 12px; }
+    .fact label { display: block; color: #60728a; font-size: 12px; margin-bottom: 8px; }
+    .fact strong { font-size: 16px; }
+    .section { border-top: 1px solid #e4ebf3; padding-top: 20px; margin-top: 22px; }
+    .section h3 { margin: 0 0 12px; font-size: 19px; }
+    ul { padding-left: 22px; line-height: 1.8; margin: 8px 0; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .tab { border: 1px solid #cddbea; background: #fff; border-radius: 9px; padding: 10px 14px; cursor: pointer; font-weight: 700; }
+    .tab.active { background: #173c68; color: #fff; border-color: #173c68; }
+    .note { font-size: 13px; color: #63768a; line-height: 1.5; }
+    footer { text-align: center; color: #758397; padding: 25px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header><div class="brand">funda<span>spring</span> <span style="font-weight:400;color:white">/ Career Discovery</span></div></header>
+  <main>
+    <section id="home">
+      <div class="eyebrow">Discover what comes next</div>
+      <h1>Your future has many possibilities.</h1>
+      <p class="intro">Explore careers, courses, entrance exams, college options and timelines — all in one place.</p>
+      <input id="search" class="search" type="search" placeholder="Search a career, e.g. UI/UX Designer" aria-label="Search careers" />
+      <p id="count" class="count"></p>
+      <div id="catalog" class="catalog"></div>
+    </section>
+    <section id="detail" class="detail hidden" aria-live="polite"></section>
+  </main>
+  <footer>Fundaspring Career Explorer • Demonstration version</footer>
+  <script>
+    // Demonstration record. Later, we will move all career data into careers.json.
+    const careers = [
+      {
+        id: 'ui-ux-designer', title: 'UI/UX Designers', icon: '🎨', category: 'Art & Design',
+        description: 'Design digital experiences, such as websites and apps, that people find useful and easy to use.',
+        group: 'Any stream for some programmes; PCM required for certain institutes',
+        course: 'B.Des in Interaction Design, Communication Design, or a related design discipline',
+        duration: 'Typically 4 years (B.Des)',
+        exams: [
+          { name: 'UCEED', month: 'January', admission: 'Typically March–July' },
+          { name: 'NID DAT', month: 'December (Prelims)', admission: 'Typically April–July' }
+        ],
+        salary: '₹4–10 LPA (book-based illustration; to be updated)',
+        colleges: {
+          nirf: ['IIT Bombay', 'IIT Delhi', 'IIT Guwahati', 'IIT Hyderabad'],
+          india: ['IDC School of Design, IIT Bombay', 'Department of Design, IIT Delhi', 'NID Ahmedabad', 'MIT Institute of Design, Pune'],
+          tamilnadu: ['VIT School of Design, Vellore']
+        }
+      }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const asList = items => `<ul>${items.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>`;
+    function renderCatalog() {
+      const query = $('search').value.toLowerCase().trim();
+      const matches = careers.filter(c => [c.title, c.category, c.course, c.group].join(' ').toLowerCase().includes(query));
+      $('count').textContent = `${matches.length} career${matches.length === 1 ? '' : 's'} available in this demonstration`;
+      $('catalog').innerHTML = matches.map(c => `<button class="tile" data-id="${escapeHTML(c.id)}">
+        <div class="emoji">${escapeHTML(c.icon)}</div><strong>${escapeHTML(c.title)}</strong>
+        <small>${escapeHTML(c.category)} · View career details →</small></button>`).join('') || '<p>No matching career in this demo.</p>';
+      $('catalog').querySelectorAll('[data-id]').forEach(btn => btn.addEventListener('click', () => openCard(btn.dataset.id)));
+    }
+    function openCard(id) {
+      const c = careers.find(item => item.id === id);
+      if (!c) return;
+      $('home').classList.add('hidden');
+      $('detail').classList.remove('hidden');
+      $('detail').innerHTML = `
+        <button id="back" class="back">← Back to careers</button><br>
+        <span class="pill">${escapeHTML(c.category)}</span>
+        <h1>${escapeHTML(c.title)}</h1><p class="description">${escapeHTML(c.description)}</p>
+        <div class="facts">
+          <div class="fact"><label>Class 11–12 group</label><strong>${escapeHTML(c.group)}</strong></div>
+          <div class="fact"><label>Course duration</label><strong>${escapeHTML(c.duration)}</strong></div>
+          <div class="fact"><label>Salary</label><strong>${escapeHTML(c.salary)}</strong></div>
+        </div>
+        <div class="section"><h3>Undergraduate course</h3><p>${escapeHTML(c.course)}</p></div>
+        <div class="section"><h3>Entrance exams and timelines</h3>
+          ${asList(c.exams.map(e => `${e.name} — Exam: ${e.month}; admission: ${e.admission}`))}
+        </div>
+        <div class="section"><h3>Colleges to explore</h3>
+          <div class="tabs" role="group" aria-label="College lists">
+            <button class="tab active" data-list="nirf">NIRF</button>
+            <button class="tab" data-list="india">Across India</button>
+            <button class="tab" data-list="tamilnadu">Tamil Nadu</button>
+          </div><div id="college-list"></div>
+          <p class="note">Demonstration college options. The final data will match colleges to their relevant courses and admission pathways.</p>
+        </div>`;
+      $('back').addEventListener('click', () => { $('detail').classList.add('hidden'); $('home').classList.remove('hidden'); window.scrollTo(0,0); });
+      function selectColleges(key) {
+        $('college-list').innerHTML = asList(c.colleges[key] || []);
+        $('detail').querySelectorAll('[data-list]').forEach(b => b.classList.toggle('active', b.dataset.list === key));
+      }
+      $('detail').querySelectorAll('[data-list]').forEach(b => b.addEventListener('click', () => selectColleges(b.dataset.list)));
+      selectColleges('nirf');
+      window.scrollTo(0,0);
+    }
+    $('search').addEventListener('input', renderCatalog);
+    renderCatalog();
+  </script>
+</body>
+</html>
 
