@@ -1,0 +1,277 @@
+[
+  {
+    "id": "creative-directors",
+    "title": "Creative Directors",
+    "icon": "🎬",
+    "category": "Art & Design",
+    "description": "Lead the creative direction of visual campaigns, brands and media projects.",
+    "group": "Any stream for many design programmes; PCM required by some IIT B.Des admissions.",
+    "course": "B.Des Communication/Visual Communication; BA Visual Communication; BFA; related degrees",
+    "duration": "B.Des 4 years; BA/BFA usually 3–4 years.",
+    "exams": [
+      {
+        "name": "UCEED (relevant B.Des routes)",
+        "month": "January",
+        "admission": "March–July"
+      },
+      {
+        "name": "NID DAT (relevant B.Des routes)",
+        "month": "December–January",
+        "admission": "April–July"
+      },
+      {
+        "name": "Institution-specific design admission",
+        "month": "Varies by college",
+        "admission": "May–August"
+      }
+    ],
+    "salary": "₹8–35 LPA",
+    "colleges": {
+      "nirf": [
+        "IIT Bombay",
+        "IIT Delhi",
+        "IIT Guwahati",
+        "IIT Hyderabad"
+      ],
+      "india": [
+        "NID Ahmedabad",
+        "NID Andhra Pradesh",
+        "NID Haryana",
+        "NID Madhya Pradesh",
+        "NID Assam",
+        "IIT Bombay — IDC School of Design",
+        "IIT Delhi — Department of Design",
+        "IIT Guwahati — Department of Design",
+        "IIT Hyderabad — Department of Design",
+        "MIT Institute of Design, Pune"
+      ],
+      "tamilnadu": [
+        "VIT, Vellore",
+        "SRM Institute of Science and Technology, Chennai",
+        "Sathyabama Institute of Science and Technology, Chennai",
+        "Hindustan Institute of Technology and Science, Chennai",
+        "ICAT Design and Media College, Chennai",
+        "DOT School of Design, Chennai"
+      ]
+    }
+  },
+  {
+    "id": "graphic-designers",
+    "title": "Graphic Designers",
+    "icon": "🎨",
+    "category": "Art & Design",
+    "description": "Create visual communication for digital and print media.",
+    "group": "Any stream for many design programmes; PCM required by some IIT B.Des admissions.",
+    "course": "B.Des Communication Design / Graphic Design; BFA Applied Art; BA Visual Communication",
+    "duration": "B.Des 4 years; BA/BFA usually 3–4 years.",
+    "exams": [
+      {
+        "name": "UCEED (relevant B.Des routes)",
+        "month": "January",
+        "admission": "March–July"
+      },
+      {
+        "name": "NID DAT (relevant B.Des routes)",
+        "month": "December–January",
+        "admission": "April–July"
+      },
+      {
+        "name": "Institution-specific design admission",
+        "month": "Varies by college",
+        "admission": "May–August"
+      }
+    ],
+    "salary": "₹2.5–8 LPA",
+    "colleges": {
+      "nirf": [
+        "IIT Bombay",
+        "IIT Delhi",
+        "IIT Guwahati",
+        "IIT Hyderabad"
+      ],
+      "india": [
+        "NID Ahmedabad",
+        "NID Andhra Pradesh",
+        "NID Haryana",
+        "NID Madhya Pradesh",
+        "NID Assam",
+        "IIT Bombay — IDC School of Design",
+        "IIT Delhi — Department of Design",
+        "IIT Guwahati — Department of Design",
+        "IIT Hyderabad — Department of Design",
+        "MIT Institute of Design, Pune"
+      ],
+      "tamilnadu": [
+        "VIT, Vellore",
+        "SRM Institute of Science and Technology, Chennai",
+        "Sathyabama Institute of Science and Technology, Chennai",
+        "Hindustan Institute of Technology and Science, Chennai",
+        "ICAT Design and Media College, Chennai",
+        "DOT School of Design, Chennai"
+      ]
+    }
+  },
+  {
+    "id": "animation-game-developers",
+    "title": "Animation & Game Developers",
+    "icon": "🎮",
+    "category": "Art & Design",
+    "description": "Develop animated content and interactive games for digital platforms.",
+    "group": "Any stream for many design programmes; PCM required by some IIT B.Des admissions.",
+    "course": "B.Des Animation / Game Design; BSc Animation; B.Tech Computer Science for game programming",
+    "duration": "B.Des 4 years; BA/BFA usually 3–4 years.",
+    "exams": [
+      {
+        "name": "NID DAT (selected design pathways)",
+        "month": "December–January",
+        "admission": "April–July"
+      },
+      {
+        "name": "UCEED (selected B.Des pathways)",
+        "month": "January",
+        "admission": "March–July"
+      },
+      {
+        "name": "JEE Main (B.Tech pathway)",
+        "month": "January–April",
+        "admission": "June–August"
+      }
+    ],
+    "salary": "₹3–12 LPA",
+    "colleges": {
+      "nirf": [
+        "IIT Bombay",
+        "IIT Delhi",
+        "IIT Guwahati",
+        "IIT Hyderabad"
+      ],
+      "india": [
+        "NID Ahmedabad",
+        "NID Andhra Pradesh",
+        "NID Haryana",
+        "NID Madhya Pradesh",
+        "NID Assam",
+        "IIT Bombay — IDC School of Design",
+        "IIT Delhi — Department of Design",
+        "IIT Guwahati — Department of Design",
+        "IIT Hyderabad — Department of Design",
+        "MIT Institute of Design, Pune"
+      ],
+      "tamilnadu": [
+        "VIT, Vellore",
+        "SRM Institute of Science and Technology, Chennai",
+        "Sathyabama Institute of Science and Technology, Chennai",
+        "Hindustan Institute of Technology and Science, Chennai",
+        "ICAT Design and Media College, Chennai",
+        "DOT School of Design, Chennai"
+      ]
+    }
+  },
+  {
+    "id": "vr-designers",
+    "title": "VR Designers",
+    "icon": "🥽",
+    "category": "Art & Design",
+    "description": "Create immersive virtual environments and interactive experiences.",
+    "group": "Any stream for many design programmes; PCM required by some IIT B.Des admissions.",
+    "course": "B.Des Interaction Design / Game Design; BSc Animation/3D; B.Tech CSE",
+    "duration": "B.Des 4 years; BA/BFA usually 3–4 years.",
+    "exams": [
+      {
+        "name": "UCEED / NID DAT (design pathways)",
+        "month": "December–January",
+        "admission": "March–July"
+      },
+      {
+        "name": "JEE Main (engineering pathway)",
+        "month": "January–April",
+        "admission": "June–August"
+      }
+    ],
+    "salary": "₹4–14 LPA",
+    "colleges": {
+      "nirf": [
+        "IIT Bombay",
+        "IIT Delhi",
+        "IIT Guwahati",
+        "IIT Hyderabad"
+      ],
+      "india": [
+        "NID Ahmedabad",
+        "NID Andhra Pradesh",
+        "NID Haryana",
+        "NID Madhya Pradesh",
+        "NID Assam",
+        "IIT Bombay — IDC School of Design",
+        "IIT Delhi — Department of Design",
+        "IIT Guwahati — Department of Design",
+        "IIT Hyderabad — Department of Design",
+        "MIT Institute of Design, Pune"
+      ],
+      "tamilnadu": [
+        "VIT, Vellore",
+        "SRM Institute of Science and Technology, Chennai",
+        "Sathyabama Institute of Science and Technology, Chennai",
+        "Hindustan Institute of Technology and Science, Chennai",
+        "ICAT Design and Media College, Chennai",
+        "DOT School of Design, Chennai"
+      ]
+    }
+  },
+  {
+    "id": "ui-ux-designers",
+    "title": "UI/UX Designers",
+    "icon": "📱",
+    "category": "Art & Design",
+    "description": "Design useful and intuitive experiences for websites and applications.",
+    "group": "Any stream for many design programmes; PCM required by some IIT B.Des admissions.",
+    "course": "B.Des Interaction Design / Communication Design; BSc/BA design routes; related computer science degrees",
+    "duration": "B.Des 4 years; BA/BFA usually 3–4 years.",
+    "exams": [
+      {
+        "name": "UCEED (relevant B.Des routes)",
+        "month": "January",
+        "admission": "March–July"
+      },
+      {
+        "name": "NID DAT (relevant B.Des routes)",
+        "month": "December–January",
+        "admission": "April–July"
+      },
+      {
+        "name": "Institution-specific design admission",
+        "month": "Varies by college",
+        "admission": "May–August"
+      }
+    ],
+    "salary": "₹3.5–7 LPA (entry level, Instahyre 2026)",
+    "colleges": {
+      "nirf": [
+        "IIT Bombay",
+        "IIT Delhi",
+        "IIT Guwahati",
+        "IIT Hyderabad"
+      ],
+      "india": [
+        "NID Ahmedabad",
+        "NID Andhra Pradesh",
+        "NID Haryana",
+        "NID Madhya Pradesh",
+        "NID Assam",
+        "IIT Bombay — IDC School of Design",
+        "IIT Delhi — Department of Design",
+        "IIT Guwahati — Department of Design",
+        "IIT Hyderabad — Department of Design",
+        "MIT Institute of Design, Pune"
+      ],
+      "tamilnadu": [
+        "VIT, Vellore",
+        "SRM Institute of Science and Technology, Chennai",
+        "Sathyabama Institute of Science and Technology, Chennai",
+        "Hindustan Institute of Technology and Science, Chennai",
+        "ICAT Design and Media College, Chennai",
+        "DOT School of Design, Chennai"
+      ]
+    }
+  }
+]
