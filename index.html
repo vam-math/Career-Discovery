@@ -41,6 +41,17 @@
     .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
     .tab { border: 1px solid #cddbea; background: #fff; border-radius: 9px; padding: 10px 14px; cursor: pointer; font-weight: 700; }
     .tab.active { background: #173c68; color: #fff; border-color: #173c68; }
+    .guide { background: #f1f7fd; border: 1px solid #cbdfee; border-radius: 16px; padding: 22px; margin-top: 24px; }
+    .guide h3 { margin: 0 0 7px; font-size: 21px; }
+    .guide p { color: #52647b; margin: 0 0 16px; }
+    .questions { display: flex; flex-wrap: wrap; gap: 9px; }
+    .question { text-align: left; background: white; color: #173c68; border: 1px solid #cadbec; border-radius: 12px; font: inherit; padding: 11px 13px; cursor: pointer; }
+    .question:hover, .question:focus-visible { border-color: #1679bb; }
+    .question.active { background: #173c68; border-color: #173c68; color: white; }
+    .answer { margin-top: 17px; background: white; border-radius: 12px; border: 1px solid #d6e2ee; padding: 18px; line-height: 1.7; }
+    .answer h4 { margin: 0 0 10px; font-size: 16px; }
+    .answer p { margin: 0; color: #1d2939; }
+    .answer ul { margin: 4px 0 0; }
     .note { font-size: 13px; color: #63768a; line-height: 1.5; }
     footer { text-align: center; color: #758397; padding: 25px; font-size: 13px; }
   </style>
@@ -75,6 +86,35 @@
         <small>${escapeHTML(c.category)} · View career details →</small></button>`).join('') || '<p>No matching career found.</p>';
       $('catalog').querySelectorAll('[data-id]').forEach(btn => btn.addEventListener('click', () => openCard(btn.dataset.id)));
     }
+    // All guided answers come solely from the selected record in careers.json.
+    const guidedQuestions = [
+      ['description', 'What does this career involve?'],
+      ['group', 'Which Class 11–12 group should I choose?'],
+      ['course', 'Which undergraduate course should I study?'],
+      ['exams', 'Which entrance exams should I take?'],
+      ['examtime', 'When do entrance exams take place?'],
+      ['admission', 'When do college admissions take place?'],
+      ['duration', 'How long is the course?'],
+      ['salary', 'What salary can I expect?'],
+      ['nirf', 'Which NIRF-category institutions are listed?'],
+      ['india', 'Which colleges across India can I explore?']
+    ];
+    function answerFor(c, field) {
+      const exams = Array.isArray(c.exams) ? c.exams : [];
+      switch (field) {
+        case 'description': return `<p>${escapeHTML(c.description)}</p>`;
+        case 'group': return `<p>${escapeHTML(c.group)}</p>`;
+        case 'course': return `<p>${escapeHTML(c.course)}</p>`;
+        case 'duration': return `<p>${escapeHTML(c.duration)}</p>`;
+        case 'salary': return `<p>${escapeHTML(c.salary)}</p>`;
+        case 'exams': return asList([...new Set(exams.map(e => e.name).filter(Boolean))]);
+        case 'examtime': return asList([...new Set(exams.map(e => `${e.name}: ${e.month}`).filter(Boolean))]);
+        case 'admission': return asList([...new Set(exams.map(e => `${e.name}: ${e.admission}`).filter(Boolean))]);
+        case 'nirf': return asList(c.colleges?.nirf || []);
+        case 'india': return asList(c.colleges?.india || []);
+        default: return '<p>Select a question above.</p>';
+      }
+    }
     function openCard(id) {
       const c = careers.find(item => item.id === id);
       if (!c) return;
@@ -84,6 +124,14 @@
         <button id="back" class="back">← Back to careers</button><br>
         <span class="pill">${escapeHTML(c.category)}</span>
         <h1>${escapeHTML(c.title)}</h1><p class="description">${escapeHTML(c.description)}</p>
+        <div class="guide">
+          <h3>Hi! What would you like to know about this career?</h3>
+          <p>Choose a question to see an answer from our career guide.</p>
+          <div class="questions" id="guided-questions" role="group" aria-label="Career questions">
+            ${guidedQuestions.map(([key, label]) => `<button class="question" type="button" data-question="${key}" aria-pressed="false">${escapeHTML(label)}</button>`).join('')}
+          </div>
+          <div id="guided-answer" class="answer hidden" role="status" aria-live="polite"></div>
+        </div>
         <div class="facts">
           <div class="fact"><label>Class 11–12 group</label><strong>${escapeHTML(c.group)}</strong></div>
           <div class="fact"><label>Course duration</label><strong>${escapeHTML(c.duration)}</strong></div>
@@ -100,6 +148,20 @@
           </div><div id="college-list"></div>
           <p class="note">NIRF lists reflect broad institutional categories, not a career-specific ranking. Check the selected college’s programme and eligibility before applying.</p>
         </div>`;
+      $('detail').querySelectorAll('[data-question]').forEach(button => {
+        button.addEventListener('click', () => {
+          const key = button.dataset.question;
+          const label = guidedQuestions.find(([k]) => k === key)?.[1] || '';
+          $('detail').querySelectorAll('[data-question]').forEach(b => {
+            const selected = b === button;
+            b.classList.toggle('active', selected);
+            b.setAttribute('aria-pressed', String(selected));
+          });
+          const answer = $('guided-answer');
+          answer.classList.remove('hidden');
+          answer.innerHTML = `<h4>${escapeHTML(label)}</h4>${answerFor(c, key)}`;
+        });
+      });
       $('back').addEventListener('click', () => { $('detail').classList.add('hidden'); $('home').classList.remove('hidden'); window.scrollTo(0,0); });
       function selectColleges(key) {
         $('college-list').innerHTML = asList(c.colleges[key] || []);
