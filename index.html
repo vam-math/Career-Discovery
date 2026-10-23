@@ -41,6 +41,15 @@
     .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
     .tab { border: 1px solid #cddbea; background: #fff; border-radius: 9px; padding: 10px 14px; cursor: pointer; font-weight: 700; }
     .tab.active { background: #173c68; color: #fff; border-color: #173c68; }
+    .question-screen { max-width: 830px; margin: auto; }
+    .explorer { background: #edf6ff; border: 1px solid #d3e5f6; border-radius: 20px; padding: clamp(18px,4vw,30px); margin: 28px 0 44px; }
+    .career-select { width: 100%; max-width: 550px; border: 1px solid #b8cfe4; border-radius: 12px; padding: 14px; background: white; font: inherit; margin: 8px 0 16px; }
+    .catalog-heading { margin-top: 20px; }
+    .question-answer { background: white; border: 1px solid #d4e1ee; border-radius: 14px; padding: 19px; margin-top: 17px; line-height: 1.6; }
+    .question-answer h3 { margin-top: 0; }
+    .question-screen h1 { margin-bottom: 8px; }
+    .questions { display: grid !important; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); }
+    .question { min-height: 65px; display:flex; align-items:center; }
     .guide { background: #f1f7fd; border: 1px solid #cbdfee; border-radius: 16px; padding: 22px; margin-top: 24px; }
     .guide h3 { margin: 0 0 7px; font-size: 21px; }
     .guide p { color: #52647b; margin: 0 0 16px; }
@@ -63,9 +72,26 @@
       <div class="eyebrow">Discover what comes next</div>
       <h1>Your future has many possibilities.</h1>
       <p class="intro">Explore careers, courses, entrance exams, college options and timelines — all in one place.</p>
-      <input id="search" class="search" type="search" placeholder="Search a career, e.g. UI/UX Designer" aria-label="Search careers" />
-      <p id="count" class="count"></p>
-      <div id="catalog" class="catalog"></div>
+      <section class="explorer" aria-labelledby="guide-heading">
+        <div class="eyebrow">Guided career questions</div>
+        <h2 id="guide-heading">What would you like to know?</h2>
+        <p class="intro">Select a career, then choose a question to see the answer.</p>
+        <label for="guide-career"><strong>Choose a career</strong></label><br />
+        <select id="guide-career" class="career-select"><option value="">Select a career…</option></select>
+        <div id="guide-questions" class="hidden">
+          <h3>Choose a question</h3>
+          <div id="question-options" class="questions"></div>
+          <div id="guide-answer" class="question-answer hidden" aria-live="polite"></div>
+        </div>
+      </section>
+      <section aria-labelledby="catalog-heading">
+        <div class="eyebrow">Explore all careers</div>
+        <h2 id="catalog-heading" class="catalog-heading">Career cards</h2>
+        <p class="intro">Browse the catalogue and open a complete career card.</p>
+        <input id="search" class="search" type="search" placeholder="Search a career, e.g. UI/UX Designer" aria-label="Search careers" />
+        <p id="count" class="count"></p>
+        <div id="catalog" class="catalog"></div>
+      </section>
     </section>
     <section id="detail" class="detail hidden" aria-live="polite"></section>
   </main>
@@ -115,61 +141,60 @@
         default: return '<p>Select a question above.</p>';
       }
     }
+    let selectedCareer = null;
+    function showView(name) {
+      ['home', 'detail'].forEach(id => $(id).classList.toggle('hidden', id !== name));
+      window.scrollTo(0, 0);
+    }
+    function renderGuide() {
+      const select = $('guide-career');
+      select.innerHTML = '<option value="">Select a career…</option>' + careers.map(c => `<option value="${escapeHTML(c.id)}">${escapeHTML(c.title)}</option>`).join('');
+      select.addEventListener('change', () => {
+        selectedCareer = careers.find(c => c.id === select.value) || null;
+        $('guide-questions').classList.toggle('hidden', !selectedCareer);
+        $('guide-answer').classList.add('hidden');
+        if (!selectedCareer) return;
+        $('question-options').innerHTML = guidedQuestions.map(([key,label]) => `<button class="question" type="button" data-question="${key}">${escapeHTML(label)} →</button>`).join('');
+        $('question-options').querySelectorAll('[data-question]').forEach(button => button.addEventListener('click', () => {
+          $('question-options').querySelectorAll('.question').forEach(q => q.classList.toggle('active', q === button));
+          const label = guidedQuestions.find(([key]) => key === button.dataset.question)?.[1] || '';
+          $('guide-answer').innerHTML = `<h3>${escapeHTML(label)}</h3>${answerFor(selectedCareer, button.dataset.question)}`;
+          $('guide-answer').classList.remove('hidden');
+        }));
+      });
+    }
+    // Full career cards remain independent of the guided questions.
     function openCard(id) {
       const c = careers.find(item => item.id === id);
       if (!c) return;
-      $('home').classList.add('hidden');
-      $('detail').classList.remove('hidden');
+      const exams = Array.isArray(c.exams) ? c.exams : [];
       $('detail').innerHTML = `
-        <button id="back" class="back">← Back to careers</button><br>
-        <span class="pill">${escapeHTML(c.category)}</span>
-        <h1>${escapeHTML(c.title)}</h1><p class="description">${escapeHTML(c.description)}</p>
-        <div class="guide">
-          <h3>Hi! What would you like to know about this career?</h3>
-          <p>Choose a question to see an answer from our career guide.</p>
-          <div class="questions" id="guided-questions" role="group" aria-label="Career questions">
-            ${guidedQuestions.map(([key, label]) => `<button class="question" type="button" data-question="${key}" aria-pressed="false">${escapeHTML(label)}</button>`).join('')}
-          </div>
-          <div id="guided-answer" class="answer hidden" role="status" aria-live="polite"></div>
-        </div>
+        <button id="back-to-careers" class="back" type="button">← Back to career explorer</button>
+        <div><span class="pill">${escapeHTML(c.category)}</span></div>
+        <h1>${escapeHTML(c.title)}</h1>
+        <p class="description">${escapeHTML(c.description)}</p>
         <div class="facts">
           <div class="fact"><label>Class 11–12 group</label><strong>${escapeHTML(c.group)}</strong></div>
           <div class="fact"><label>Course duration</label><strong>${escapeHTML(c.duration)}</strong></div>
           <div class="fact"><label>Salary</label><strong>${escapeHTML(c.salary)}</strong></div>
         </div>
-        <div class="section"><h3>Undergraduate course</h3><p>${escapeHTML(c.course)}</p></div>
-        <div class="section"><h3>Entrance exams and timelines</h3>
-          ${asList(c.exams.map(e => `${e.name} — Exam: ${e.month}; admission: ${e.admission}`))}
-        </div>
-        <div class="section"><h3>College options</h3>
+        <div class="section"><h3>Undergraduate courses</h3><p>${escapeHTML(c.course)}</p></div>
+        <div class="section"><h3>Entrance examinations</h3>${asList([...new Set(exams.map(e=>e.name).filter(Boolean))])}</div>
+        <div class="section"><h3>Entrance exam timeline</h3>${asList([...new Set(exams.map(e=>`${e.name}: ${e.month}`).filter(Boolean))])}</div>
+        <div class="section"><h3>College admission timeline</h3>${asList([...new Set(exams.map(e=>`${e.name}: ${e.admission}`).filter(Boolean))])}</div>
+        <div class="section"><h3>Colleges to explore</h3>
           <div class="tabs" role="group" aria-label="College lists">
-            <button class="tab active" data-list="nirf">NIRF category</button>
-            <button class="tab" data-list="india">Across India</button>
-          </div><div id="college-list"></div>
-          <p class="note">NIRF lists reflect broad institutional categories, not a career-specific ranking. Check the selected college’s programme and eligibility before applying.</p>
+            <button type="button" class="tab active" data-college="nirf">NIRF category</button>
+            <button type="button" class="tab" data-college="india">Across India</button>
+          </div>
+          <div id="college-results">${asList(c.colleges?.nirf || [])}</div>
         </div>`;
-      $('detail').querySelectorAll('[data-question]').forEach(button => {
-        button.addEventListener('click', () => {
-          const key = button.dataset.question;
-          const label = guidedQuestions.find(([k]) => k === key)?.[1] || '';
-          $('detail').querySelectorAll('[data-question]').forEach(b => {
-            const selected = b === button;
-            b.classList.toggle('active', selected);
-            b.setAttribute('aria-pressed', String(selected));
-          });
-          const answer = $('guided-answer');
-          answer.classList.remove('hidden');
-          answer.innerHTML = `<h4>${escapeHTML(label)}</h4>${answerFor(c, key)}`;
-        });
-      });
-      $('back').addEventListener('click', () => { $('detail').classList.add('hidden'); $('home').classList.remove('hidden'); window.scrollTo(0,0); });
-      function selectColleges(key) {
-        $('college-list').innerHTML = asList(c.colleges[key] || []);
-        $('detail').querySelectorAll('[data-list]').forEach(b => b.classList.toggle('active', b.dataset.list === key));
-      }
-      $('detail').querySelectorAll('[data-list]').forEach(b => b.addEventListener('click', () => selectColleges(b.dataset.list)));
-      selectColleges('nirf');
-      window.scrollTo(0,0);
+      $('back-to-careers').addEventListener('click', () => showView('home'));
+      $('detail').querySelectorAll('[data-college]').forEach(button => button.addEventListener('click', () => {
+        $('detail').querySelectorAll('[data-college]').forEach(b=>b.classList.toggle('active',b===button));
+        $('college-results').innerHTML = asList(c.colleges?.[button.dataset.college] || []);
+      }));
+      showView('detail');
     }
     $('search').addEventListener('input', renderCatalog);
     async function loadCareers() {
@@ -180,6 +205,7 @@
         const records = await response.json();
         if (!Array.isArray(records)) throw new Error('Invalid career data');
         careers = records;
+        renderGuide();
         renderCatalog();
       } catch (error) {
         $('count').textContent = 'Unable to load career cards. Please check that careers.json is uploaded in the same folder as index.html.';
